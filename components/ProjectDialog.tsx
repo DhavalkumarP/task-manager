@@ -7,7 +7,6 @@ import {
   DialogActions,
   TextField,
   Button,
-  CircularProgress,
 } from "@mui/material";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -103,13 +102,7 @@ export default function ProjectDialog({
                 disabled={isSubmitting}
                 className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700"
               >
-                {isSubmitting ? (
-                  <CircularProgress size={24} className="text-white" />
-                ) : editingProject ? (
-                  "Update Project"
-                ) : (
-                  "Create Project"
-                )}
+                {editingProject ? "Update Project" : "Create Project"}
               </Button>
             </DialogActions>
           </Form>

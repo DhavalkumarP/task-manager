@@ -2,7 +2,6 @@ import { TaskStatus } from "@/types/common";
 import { ITask } from "@/types/frontend/ITask";
 import {
   Button,
-  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -134,13 +133,7 @@ export default function TaskDialog({
                 disabled={isSubmitting}
                 className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700"
               >
-                {isSubmitting ? (
-                  <CircularProgress size={24} className="text-white" />
-                ) : editingTask ? (
-                  "Update Task"
-                ) : (
-                  "Create Task"
-                )}
+                {editingTask ? "Update Task" : "Create Task"}
               </Button>
             </DialogActions>
           </Form>

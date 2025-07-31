@@ -8,12 +8,13 @@ import {
   Typography,
 } from "@mui/material";
 import { Delete as DeleteIcon } from "@mui/icons-material";
+import { useState } from "react";
 
 type DeleteDialogProps = {
   open: boolean;
   task: ITask | null;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: () => Promise<void>;
 };
 
 export default function DeleteTaskDialog({
@@ -22,6 +23,14 @@ export default function DeleteTaskDialog({
   onClose,
   onConfirm,
 }: DeleteDialogProps) {
+  const [isConfirming, setIsConfirming] = useState(false);
+
+  const handleConfirm = async () => {
+    setIsConfirming(true);
+    await onConfirm();
+    setIsConfirming(false);
+  };
+
   return (
     <Dialog
       open={open}
@@ -33,8 +42,8 @@ export default function DeleteTaskDialog({
       }}
     >
       <DialogTitle className="text-center pt-8">
-        <div className="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
-          <DeleteIcon className="w-8 h-8 text-red-600" />
+        <div className="mx-auto w-16 h-16 bg-gradient-to-r from-red-500 to-rose-600 rounded-full flex items-center justify-center mb-4">
+          <DeleteIcon className="w-8 h-8 text-white" />
         </div>
         <Typography variant="h6" className="font-semibold">
           Delete Task
@@ -52,13 +61,17 @@ export default function DeleteTaskDialog({
         </Typography>
       </DialogContent>
       <DialogActions className="p-6 pt-0 justify-center gap-3">
-        <Button onClick={onClose} className="text-gray-600">
+        <Button
+          onClick={onClose}
+          className="text-gray-600 hover:text-gray-800 transition-colors"
+        >
           Cancel
         </Button>
         <Button
-          onClick={onConfirm}
+          onClick={handleConfirm}
           variant="contained"
-          className="bg-red-600 hover:bg-red-700"
+          className="bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white transition-all duration-200 transform hover:scale-[1.02] shadow-lg normal-case"
+          disabled={isConfirming}
         >
           Delete Task
         </Button>

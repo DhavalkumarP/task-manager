@@ -2,14 +2,7 @@
 
 import { Formik, FormikHelpers } from "formik";
 import * as Yup from "yup";
-import {
-  Container,
-  Paper,
-  TextField,
-  Button,
-  Typography,
-  CircularProgress,
-} from "@mui/material";
+import { Container, Paper, TextField, Button, Typography } from "@mui/material";
 import Link from "next/link";
 import { AssignmentInd } from "@mui/icons-material";
 import { getErrorMessage } from "@/utils/helper";
@@ -146,11 +139,7 @@ export default function LoginPage() {
                     disabled={isSubmitting}
                     className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white py-3 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-lg normal-case font-medium text-base"
                   >
-                    {isSubmitting ? (
-                      <CircularProgress size={24} className="text-white" />
-                    ) : (
-                      "Sign In"
-                    )}
+                    Sign In
                   </Button>
                 </div>
                 <div className="text-center pt-4">
