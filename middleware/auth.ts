@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyToken, extractTokenFromHeader } from "@/lib/jwt";
-import { ICommonResponse } from "@/services/types";
+import { ICommonResponse } from "@/types/common";
 
 export interface AuthenticatedRequest extends NextRequest {
   user?: {
