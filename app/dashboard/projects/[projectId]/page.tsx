@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Button, CircularProgress, IconButton, Chip } from "@mui/material";
+import { Button, CircularProgress, IconButton } from "@mui/material";
 import {
   ArrowBack as BackIcon,
   Add as AddIcon,
@@ -27,39 +27,8 @@ import { ITask } from "@/types/frontend/ITask";
 import useTask from "@/hooks/useTask";
 import TaskDialog from "@/components/TaskDialog";
 import DeleteTaskDialog from "@/components/DeleteTaskDialog";
+import StatusDropdown from "@/components/StatusDropdown";
 
-const getStatusIcon = (status: TaskStatus) => {
-  switch (status) {
-    case TaskStatus.TODO:
-      return <TodoIcon className="text-gray-500" />;
-    case TaskStatus.IN_PROGRESS:
-      return <InProgressIcon className="text-indigo-500" />;
-    case TaskStatus.DONE:
-      return <DoneIcon className="text-green-500" />;
-  }
-};
-
-const getStatusChip = (status: TaskStatus) => {
-  const statusConfig = {
-    [TaskStatus.TODO]: {
-      label: "To Do",
-      className: "bg-gray-100 text-gray-700",
-    },
-    [TaskStatus.IN_PROGRESS]: {
-      label: "In Progress",
-      className: "bg-gradient-to-r from-blue-100 to-indigo-100 text-indigo-700",
-    },
-    [TaskStatus.DONE]: {
-      label: "Done",
-      className: "bg-green-100 text-green-700",
-    },
-  };
-
-  const config = statusConfig[status];
-  return (
-    <Chip label={config.label} size="small" className={config.className} />
-  );
-};
 
 export default function ProjectDetailPage() {
   const params = useParams();
@@ -383,21 +352,6 @@ export default function ProjectDetailPage() {
                     className="group px-6 py-4 hover:bg-gray-50 transition-colors duration-200"
                   >
                     <div className="flex items-center gap-4">
-                      <IconButton
-                        onClick={() => {
-                          const nextStatus =
-                            task.status === TaskStatus.TODO
-                              ? TaskStatus.IN_PROGRESS
-                              : task.status === TaskStatus.IN_PROGRESS
-                              ? TaskStatus.DONE
-                              : TaskStatus.TODO;
-                          handleQuickStatusUpdate(task, nextStatus);
-                        }}
-                        className="hover:scale-110 transition-transform duration-200"
-                      >
-                        {getStatusIcon(task.status)}
-                      </IconButton>
-
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex-1">
@@ -411,7 +365,12 @@ export default function ProjectDetailPage() {
                               {task.title}
                             </h3>
                             <div className="flex items-center gap-3 mt-2">
-                              {getStatusChip(task.status)}
+                              <StatusDropdown
+                                status={task.status}
+                                onStatusChange={(newStatus) =>
+                                  handleQuickStatusUpdate(task, newStatus)
+                                }
+                              />
                               {task.dueDate && (
                                 <div className="flex items-center gap-1 text-gray-500 text-sm">
                                   <CalendarIcon className="w-4 h-4" />
