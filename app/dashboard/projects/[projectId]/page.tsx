@@ -77,15 +77,15 @@ const getStatusChip = (status: TaskStatus) => {
   const statusConfig = {
     [TaskStatus.TODO]: {
       label: "To Do",
-      className: "bg-gray-100 text-gray-700",
+      className: "bg-gray-100 text-gray-700 font-medium",
     },
     [TaskStatus.IN_PROGRESS]: {
       label: "In Progress",
-      className: "bg-blue-100 text-blue-700",
+      className: "bg-blue-100 text-blue-700 font-medium",
     },
     [TaskStatus.DONE]: {
       label: "Done",
-      className: "bg-green-100 text-green-700",
+      className: "bg-green-100 text-green-700 font-medium",
     },
   };
 
@@ -99,7 +99,6 @@ export default function ProjectDetailPage() {
   const params = useParams();
   const router = useRouter();
   const projectId = params.projectId as string;
-  console.log("Project ID:", projectId);
 
   const [project, setProject] = useState<IProject | null>(null);
   const [tasks, setTasks] = useState<ITask[]>([]);
@@ -230,7 +229,7 @@ export default function ProjectDetailPage() {
   if (loading) {
     return (
       <Box className="flex justify-center items-center min-h-[60vh]">
-        <CircularProgress />
+        <CircularProgress className="text-blue-600" size={48} />
       </Box>
     );
   }
@@ -239,21 +238,27 @@ export default function ProjectDetailPage() {
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Box>
         {/* Header */}
-        <Box className="mb-6">
-          <Button
-            startIcon={<BackIcon />}
-            onClick={() => router.push("/dashboard")}
-            className="mb-4 text-gray-600"
-          >
-            Back to Projects
-          </Button>
+        <Button
+          startIcon={<BackIcon />}
+          onClick={() => router.push("/dashboard")}
+          className="mb-6 text-gray-600 hover:text-gray-800 transition-colors"
+        >
+          Back to Projects
+        </Button>
 
+        <Paper
+          elevation={0}
+          className="mb-8 p-8 backdrop-blur-sm bg-white/90 rounded-2xl shadow-xl border border-white/50"
+        >
           <Box className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <Box>
-              <Typography variant="h4" className="font-bold text-gray-800">
+              <Typography
+                variant="h4"
+                className="font-bold mb-2 bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent"
+              >
                 {project?.name}
               </Typography>
-              <Typography variant="body1" className="text-gray-600 mt-1">
+              <Typography variant="body1" className="text-gray-600">
                 {project?.description}
               </Typography>
             </Box>
@@ -264,80 +269,124 @@ export default function ProjectDetailPage() {
                 setEditingTask(null);
                 setOpenTaskDialog(true);
               }}
-              className="bg-blue-600 hover:bg-blue-700 normal-case"
+              className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-lg normal-case font-medium px-6 py-2.5"
             >
               Add Task
             </Button>
           </Box>
-        </Box>
+        </Paper>
 
         {/* Stats */}
-        <Grid container spacing={3} className="mb-6">
+        <Grid container spacing={3} className="mb-8">
           <Grid item xs={6} sm={3}>
-            <Card
-              className="text-center cursor-pointer hover:shadow-md transition-shadow"
+            <Paper
+              elevation={0}
+              className={`group text-center cursor-pointer backdrop-blur-sm bg-white/90 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden ${
+                selectedStatus === "all" ? "ring-2 ring-blue-500" : ""
+              }`}
               onClick={() => setSelectedStatus("all")}
             >
-              <CardContent>
-                <Typography variant="h4" className="font-bold text-gray-800">
+              <Box className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gray-400 to-gray-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <CardContent className="p-6">
+                <Typography
+                  variant="h3"
+                  className="font-bold text-gray-800 mb-2"
+                >
                   {tasks.length}
                 </Typography>
-                <Typography variant="body2" className="text-gray-600">
+                <Typography
+                  variant="body2"
+                  className="text-gray-600 font-medium"
+                >
                   Total Tasks
                 </Typography>
               </CardContent>
-            </Card>
+            </Paper>
           </Grid>
           <Grid item xs={6} sm={3}>
-            <Card
-              className="text-center cursor-pointer hover:shadow-md transition-shadow"
+            <Paper
+              elevation={0}
+              className={`group text-center cursor-pointer backdrop-blur-sm bg-white/90 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden ${
+                selectedStatus === TaskStatus.TODO ? "ring-2 ring-gray-500" : ""
+              }`}
               onClick={() => setSelectedStatus(TaskStatus.TODO)}
             >
-              <CardContent>
-                <Typography variant="h4" className="font-bold text-gray-600">
+              <Box className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gray-400 to-gray-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <CardContent className="p-6">
+                <Typography
+                  variant="h3"
+                  className="font-bold text-gray-600 mb-2"
+                >
                   {tasksByStatus[TaskStatus.TODO].length}
                 </Typography>
-                <Typography variant="body2" className="text-gray-600">
+                <Typography
+                  variant="body2"
+                  className="text-gray-600 font-medium"
+                >
                   To Do
                 </Typography>
               </CardContent>
-            </Card>
+            </Paper>
           </Grid>
           <Grid item xs={6} sm={3}>
-            <Card
-              className="text-center cursor-pointer hover:shadow-md transition-shadow"
+            <Paper
+              elevation={0}
+              className={`group text-center cursor-pointer backdrop-blur-sm bg-white/90 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden ${
+                selectedStatus === TaskStatus.IN_PROGRESS
+                  ? "ring-2 ring-blue-500"
+                  : ""
+              }`}
               onClick={() => setSelectedStatus(TaskStatus.IN_PROGRESS)}
             >
-              <CardContent>
-                <Typography variant="h4" className="font-bold text-blue-600">
+              <Box className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <CardContent className="p-6">
+                <Typography
+                  variant="h3"
+                  className="font-bold text-blue-600 mb-2"
+                >
                   {tasksByStatus[TaskStatus.IN_PROGRESS].length}
                 </Typography>
-                <Typography variant="body2" className="text-gray-600">
+                <Typography
+                  variant="body2"
+                  className="text-gray-600 font-medium"
+                >
                   In Progress
                 </Typography>
               </CardContent>
-            </Card>
+            </Paper>
           </Grid>
           <Grid item xs={6} sm={3}>
-            <Card
-              className="text-center cursor-pointer hover:shadow-md transition-shadow"
+            <Paper
+              elevation={0}
+              className={`group text-center cursor-pointer backdrop-blur-sm bg-white/90 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden ${
+                selectedStatus === TaskStatus.DONE
+                  ? "ring-2 ring-green-500"
+                  : ""
+              }`}
               onClick={() => setSelectedStatus(TaskStatus.DONE)}
             >
-              <CardContent>
-                <Typography variant="h4" className="font-bold text-green-600">
+              <Box className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-400 to-green-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <CardContent className="p-6">
+                <Typography
+                  variant="h3"
+                  className="font-bold text-green-600 mb-2"
+                >
                   {tasksByStatus[TaskStatus.DONE].length}
                 </Typography>
-                <Typography variant="body2" className="text-gray-600">
+                <Typography
+                  variant="body2"
+                  className="text-gray-600 font-medium"
+                >
                   Done
                 </Typography>
               </CardContent>
-            </Card>
+            </Paper>
           </Grid>
         </Grid>
 
         {/* Filter */}
-        <Box className="mb-4">
-          <FormControl size="small" className="min-w-[200px]">
+        <Box className="mb-6">
+          <FormControl size="medium" className="min-w-[250px]">
             <InputLabel>Filter by Status</InputLabel>
             <Select
               value={selectedStatus}
@@ -345,6 +394,7 @@ export default function ProjectDetailPage() {
                 setSelectedStatus(e.target.value as TaskStatus | "all")
               }
               label="Filter by Status"
+              className="bg-white/90 backdrop-blur-sm rounded-lg"
             >
               <MenuItem value="all">All Tasks</MenuItem>
               <MenuItem value={TaskStatus.TODO}>To Do</MenuItem>
@@ -356,14 +406,23 @@ export default function ProjectDetailPage() {
 
         {/* Tasks List */}
         {filteredTasks.length === 0 ? (
-          <Card className="text-center py-12">
-            <CardContent>
-              <Typography variant="h6" className="text-gray-600 mb-2">
+          <Paper
+            elevation={0}
+            className="text-center py-16 backdrop-blur-sm bg-white/90 rounded-2xl shadow-xl"
+          >
+            <Box className="flex flex-col items-center">
+              <Box className="flex items-center justify-center w-24 h-24 bg-gradient-to-r from-gray-100 to-gray-200 rounded-full mb-6">
+                <InProgressIcon className="text-5xl text-gray-400" />
+              </Box>
+              <Typography variant="h5" className="font-bold text-gray-800 mb-2">
                 No tasks found
               </Typography>
-              <Typography variant="body2" className="text-gray-500 mb-4">
+              <Typography
+                variant="body1"
+                className="text-gray-600 mb-6 max-w-sm"
+              >
                 {selectedStatus === "all"
-                  ? "Create your first task to get started"
+                  ? "Create your first task to get started with this project"
                   : `No tasks with status "${selectedStatus}"`}
               </Typography>
               {selectedStatus === "all" && (
@@ -371,20 +430,23 @@ export default function ProjectDetailPage() {
                   variant="contained"
                   startIcon={<AddIcon />}
                   onClick={() => setOpenTaskDialog(true)}
-                  className="bg-blue-600 hover:bg-blue-700 normal-case"
+                  className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-lg normal-case font-medium"
                 >
-                  Create Task
+                  Create Your First Task
                 </Button>
               )}
-            </CardContent>
-          </Card>
+            </Box>
+          </Paper>
         ) : (
-          <Paper elevation={0} className="border border-gray-200">
+          <Paper
+            elevation={0}
+            className="backdrop-blur-sm bg-white/90 rounded-2xl shadow-xl overflow-hidden"
+          >
             <List className="p-0">
               {filteredTasks.map((task, index) => (
                 <Box key={task.id}>
-                  {index > 0 && <Divider />}
-                  <ListItem className="hover:bg-gray-50 py-4">
+                  {index > 0 && <Divider className="bg-gray-100" />}
+                  <ListItem className="group hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-indigo-50/50 transition-all duration-200 py-4 px-6">
                     <Box className="flex items-center mr-4">
                       <IconButton
                         onClick={() => {
@@ -396,6 +458,7 @@ export default function ProjectDetailPage() {
                               : TaskStatus.TODO;
                           handleQuickStatusUpdate(task, nextStatus);
                         }}
+                        className="hover:scale-110 transition-transform duration-200"
                       >
                         {getStatusIcon(task.status)}
                       </IconButton>
@@ -403,7 +466,7 @@ export default function ProjectDetailPage() {
                     <ListItemText
                       primary={
                         <Typography
-                          className={`${
+                          className={`font-medium text-lg ${
                             task.status === TaskStatus.DONE
                               ? "line-through text-gray-500"
                               : "text-gray-800"
@@ -413,12 +476,15 @@ export default function ProjectDetailPage() {
                         </Typography>
                       }
                       secondary={
-                        <Box className="flex items-center gap-2 mt-1">
+                        <Box className="flex items-center gap-3 mt-2">
                           {getStatusChip(task.status)}
                           {task.dueDate && (
                             <Box className="flex items-center gap-1 text-gray-500">
-                              <CalendarIcon fontSize="small" />
-                              <Typography variant="caption">
+                              <CalendarIcon className="text-sm" />
+                              <Typography
+                                variant="caption"
+                                className="font-medium"
+                              >
                                 {new Date(task.dueDate).toLocaleDateString()}
                               </Typography>
                             </Box>
@@ -426,21 +492,21 @@ export default function ProjectDetailPage() {
                         </Box>
                       }
                     />
-                    <ListItemSecondaryAction>
+                    <ListItemSecondaryAction className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                       <IconButton
                         edge="end"
                         onClick={() => {
                           setEditingTask(task);
                           setOpenTaskDialog(true);
                         }}
-                        className="text-gray-600 hover:text-blue-600"
+                        className="text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
                       >
                         <EditIcon />
                       </IconButton>
                       <IconButton
                         edge="end"
                         onClick={() => setDeletingTask(task)}
-                        className="text-gray-600 hover:text-red-600 ml-1"
+                        className="text-gray-500 hover:text-red-600 hover:bg-red-50 transition-all duration-200 ml-1"
                       >
                         <DeleteIcon />
                       </IconButton>
@@ -461,6 +527,11 @@ export default function ProjectDetailPage() {
           }}
           maxWidth="sm"
           fullWidth
+          slotProps={{
+            paper: {
+              className: "backdrop-blur-sm bg-white/95 rounded-2xl shadow-2xl",
+            },
+          }}
         >
           <Formik
             initialValues={{
@@ -483,11 +554,21 @@ export default function ProjectDetailPage() {
               isSubmitting,
             }) => (
               <Form>
-                <DialogTitle>
-                  {editingTask ? "Edit Task" : "Create New Task"}
+                <DialogTitle className="text-center pb-0">
+                  <Box className="flex flex-row gap-2 items-center">
+                    <Box className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-full">
+                      <AddIcon className="text-3xl text-blue-600" />
+                    </Box>
+                    <Typography
+                      variant="h5"
+                      className="font-bold text-gray-800"
+                    >
+                      {editingTask ? "Edit Task" : "Create New Task"}
+                    </Typography>
+                  </Box>
                 </DialogTitle>
                 <DialogContent>
-                  <Box className="space-y-4 mt-2">
+                  <Box className="flex flex-col gap-y-4 mt-4">
                     <TextField
                       fullWidth
                       label="Task Title"
@@ -497,7 +578,10 @@ export default function ProjectDetailPage() {
                       onBlur={handleBlur}
                       error={touched.title && Boolean(errors.title)}
                       helperText={touched.title && errors.title}
-                      autoFocus
+                      className="bg-gray-50"
+                      slotProps={{
+                        input: { className: "rounded-lg" },
+                      }}
                     />
                     <FormControl fullWidth>
                       <InputLabel>Status</InputLabel>
@@ -529,13 +613,14 @@ export default function ProjectDetailPage() {
                     />
                   </Box>
                 </DialogContent>
-                <DialogActions>
+                <DialogActions className="p-6 pt-2">
                   <Button
                     onClick={() => {
                       setOpenTaskDialog(false);
                       setEditingTask(null);
                     }}
                     disabled={isSubmitting}
+                    className="text-gray-600 hover:text-gray-800"
                   >
                     Cancel
                   </Button>
@@ -543,14 +628,14 @@ export default function ProjectDetailPage() {
                     type="submit"
                     variant="contained"
                     disabled={isSubmitting}
-                    className="bg-blue-600 hover:bg-blue-700"
+                    className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-lg normal-case font-medium"
                   >
                     {isSubmitting ? (
-                      <CircularProgress size={24} />
+                      <CircularProgress size={24} className="text-white" />
                     ) : editingTask ? (
-                      "Update"
+                      "Update Task"
                     ) : (
-                      "Create"
+                      "Create Task"
                     )}
                   </Button>
                 </DialogActions>
@@ -565,22 +650,46 @@ export default function ProjectDetailPage() {
           onClose={() => setDeletingTask(null)}
           maxWidth="xs"
           fullWidth
+          slotProps={{
+            paper: {
+              className: "backdrop-blur-sm bg-white/95 rounded-2xl shadow-2xl",
+            },
+          }}
         >
-          <DialogTitle>Delete Task</DialogTitle>
-          <DialogContent>
-            <Typography>
-              Are you sure you want to delete "{deletingTask?.title}"?
+          <DialogTitle className="text-center pb-0">
+            <Box className="flex flex-col items-center">
+              <Box className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-red-100 to-pink-100 rounded-full mb-4">
+                <DeleteIcon className="text-3xl text-red-600" />
+              </Box>
+              <Typography variant="h5" className="font-bold text-gray-800">
+                Delete Task
+              </Typography>
+            </Box>
+          </DialogTitle>
+          <DialogContent className="text-center">
+            <Typography className="text-gray-600">
+              Are you sure you want to delete
+            </Typography>
+            <Typography className="font-semibold text-gray-800 my-2">
+              &quot;{deletingTask?.title}&quot;?
+            </Typography>
+            <Typography variant="body2" className="text-gray-500 mt-4">
+              This action cannot be undone.
             </Typography>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setDeletingTask(null)}>Cancel</Button>
+          <DialogActions className="p-6 pt-2 justify-center gap-3">
+            <Button
+              onClick={() => setDeletingTask(null)}
+              className="text-gray-600 hover:text-gray-800 px-6"
+            >
+              Cancel
+            </Button>
             <Button
               onClick={handleDeleteTask}
               variant="contained"
-              color="error"
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-lg normal-case font-medium"
             >
-              Delete
+              Delete Task
             </Button>
           </DialogActions>
         </Dialog>

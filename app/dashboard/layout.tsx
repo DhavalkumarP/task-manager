@@ -5,7 +5,6 @@ import {
   AppBar,
   Toolbar,
   Typography,
-  Button,
   Container,
   Box,
   IconButton,
@@ -16,6 +15,8 @@ import {
   ListItemText,
   useMediaQuery,
   useTheme,
+  Avatar,
+  Divider,
 } from "@mui/material";
 import {
   Menu as MenuIcon,
@@ -42,68 +43,71 @@ export default function DashboardLayout({
   };
 
   const drawerContent = (
-    <Box className="h-full bg-gray-50">
-      <List>
-        <ListItem className="py-4 px-6">
-          <ListItemIcon>
-            <AssignmentIcon className="text-blue-600" />
-          </ListItemIcon>
-          <ListItemText
-            primary="Task Manager"
-            primaryTypographyProps={{
-              className: "font-bold text-gray-800",
-            }}
-          />
-        </ListItem>
+    <Box className="h-full bg-gradient-to-b from-white to-blue-50/30">
+      <List className="px-3">
         <ListItem
           component="button"
           onClick={() => router.push("/dashboard")}
-          className="hover:bg-blue-50 transition-colors"
+          className="rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 mb-2"
         >
-          <ListItemIcon>
-            <DashboardIcon className="text-gray-600" />
+          <ListItemIcon className="min-w-0 mr-3">
+            <Box className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg shadow-sm">
+              <DashboardIcon className="text-white text-xl" />
+            </Box>
           </ListItemIcon>
-          <ListItemText primary="Dashboard" />
+          <ListItemText
+            primary="Dashboard"
+            slotProps={{
+              primary: {
+                className: "font-semibold text-gray-800",
+              },
+            }}
+          />
         </ListItem>
       </List>
     </Box>
   );
 
   return (
-    <Box className="min-h-screen bg-gray-100">
+    <Box className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <AppBar
         position="fixed"
         elevation={0}
-        className="bg-white border-b border-gray-200"
+        className="backdrop-blur-md bg-white/80 border-b border-gray-200/50"
       >
-        <Toolbar>
+        <Toolbar className="px-4 sm:px-6">
           {isMobile && (
             <IconButton
               edge="start"
               onClick={handleDrawerToggle}
-              className="mr-2 text-gray-700"
+              className="mr-2 text-gray-700 hover:bg-blue-50 transition-colors"
             >
               <MenuIcon />
             </IconButton>
           )}
-          <Typography
-            variant="h6"
-            component="div"
-            className="flex-grow text-gray-800 font-semibold"
-          >
-            Task Manager
-          </Typography>
-          <Box className="flex items-center gap-4">
-            <Typography className="text-gray-600 hidden sm:block">
+          <Box className="flex items-center gap-3 flex-grow">
+            <Box className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg shadow-md">
+              <AssignmentIcon className="text-white text-xl" />
+            </Box>
+            <Typography
+              variant="h6"
+              component="div"
+              className="font-bold text-white"
+            >
+              Task Manager
+            </Typography>
+          </Box>
+          <Box className="flex items-center gap-3">
+            <Typography className="text-white font-medium">
               {userDetails?.fullName || userDetails?.email}
             </Typography>
-            <Button
+            <IconButton
               onClick={logout}
-              startIcon={<LogoutIcon />}
-              className="normal-case text-gray-700 hover:text-red-600"
+              color="inherit"
+              className="transition-all duration-200"
             >
-              Logout
-            </Button>
+              <LogoutIcon />
+            </IconButton>
           </Box>
         </Toolbar>
       </AppBar>
@@ -117,8 +121,10 @@ export default function DashboardLayout({
             keepMounted: true,
           }}
           className="sm:hidden"
-          PaperProps={{
-            className: "w-64",
+          slotProps={{
+            paper: {
+              className: "w-64",
+            },
           }}
         >
           {drawerContent}
@@ -129,9 +135,12 @@ export default function DashboardLayout({
         {!isMobile && (
           <Drawer
             variant="permanent"
-            className="hidden sm:block"
-            PaperProps={{
-              className: "w-64 mt-16 h-[calc(100vh-64px)]",
+            className="hidden sm:block bg-gradient-to-b from-white"
+            slotProps={{
+              paper: {
+                className:
+                  "w-64 mt-16 h-[calc(100vh-64px)] border-r border-gray-200/50",
+              },
             }}
           >
             {drawerContent}
@@ -140,7 +149,7 @@ export default function DashboardLayout({
 
         <Box
           component="main"
-          className={`flex-grow ${isMobile ? "pt-16" : "pt-16 ml-64"}`}
+          className={`flex-grow ${isMobile ? "pt-20" : "pt-20 ml-64"}`}
         >
           <Container maxWidth="lg" className="py-8">
             {children}
