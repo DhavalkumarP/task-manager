@@ -10,9 +10,9 @@ import {
 import { ICommonResponse } from "@/types/common";
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     projectId: string;
-  };
+  }>;
 }
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
@@ -69,7 +69,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         throw new ApiErrorHandler("User not authenticated", 401);
       }
 
-      const { projectId } = params;
+      const { projectId } = await params;
       const body: IUpdateProjectRequest = await request.json();
 
       try {
@@ -136,7 +136,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
         throw new ApiErrorHandler("User not authenticated", 401);
       }
 
-      const { projectId } = params;
+      const { projectId } = await params;
       const projectRef = adminDb.collection("projects").doc(projectId);
       const projectDoc = await projectRef.get();
 

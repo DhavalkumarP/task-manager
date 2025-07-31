@@ -11,9 +11,9 @@ import { ICommonResponse } from "@/types/common";
 import { TaskStatus } from "@/types/common";
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     projectId: string;
-  };
+  }>;
 }
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
@@ -81,7 +81,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
         throw new ApiErrorHandler("User not authenticated", 401);
       }
 
-      const { projectId } = params;
+      const { projectId } = await params;
       const body: ICreateTaskRequest = await request.json();
 
       try {
