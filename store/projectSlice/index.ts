@@ -14,11 +14,11 @@ export const projectSlice = createSlice({
     setProjects: (state, action: PayloadAction<IProject[]>) => {
       state.projects = action.payload;
     },
-    resetProjects: () => {
+    resetProjectsSlice: () => {
       return initialState;
     },
   },
 });
 
-export const { setProjects, resetProjects } = projectSlice.actions;
+export const { setProjects, resetProjectsSlice } = projectSlice.actions;
 export default projectSlice.reducer;

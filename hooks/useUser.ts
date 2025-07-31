@@ -4,6 +4,8 @@ import { AuthAPI } from "../services/AuthAPI";
 import { resetUserSlice, setUserDetails } from "../store/userSlice";
 import { getErrorMessage } from "../utils/helper";
 import toast from "react-hot-toast";
+import { resetProjectsSlice } from "@/store/projectSlice";
+import { resetTaskSlice } from "@/store/taskSlice";
 
 const useUser = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -24,6 +26,8 @@ const useUser = () => {
 
   const logout = () => {
     dispatch(resetUserSlice());
+    dispatch(resetProjectsSlice());
+    dispatch(resetTaskSlice());
   };
 
   return {
