@@ -1,0 +1,5 @@
+export interface ICommonResponse<T = null> {
+  success: boolean;
+  message: string;
+  data: T;
+}

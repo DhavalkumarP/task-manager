@@ -10,6 +10,7 @@ import {
   REGISTER,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import userReducer from "./userSlice";
 
 const persistConfig = {
   key: "root",
@@ -17,7 +18,9 @@ const persistConfig = {
   whitelist: [],
 };
 
-const reducers = combineReducers({});
+const reducers = combineReducers({
+  user: userReducer,
+});
 
 const persistedReducer = persistReducer(persistConfig, reducers);
 

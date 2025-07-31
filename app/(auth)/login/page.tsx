@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { Formik } from "formik";
+import { Formik, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import {
   Container,
@@ -9,11 +8,16 @@ import {
   TextField,
   Button,
   Typography,
-  Alert,
   CircularProgress,
 } from "@mui/material";
 import Link from "next/link";
 import { AssignmentInd } from "@mui/icons-material";
+import { getErrorMessage } from "@/utils/helper";
+import { setUserSlice } from "@/store/userSlice";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store";
+import { AuthAPI } from "@/services/AuthAPI";
+import toast from "react-hot-toast";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -30,9 +34,31 @@ const initialValues = {
 };
 
 export default function LoginPage() {
-  const [error, setError] = useState<string | null>(null);
+  const dispatch: AppDispatch = useDispatch();
 
-  const onSubmit = async () => {};
+  const onSubmit = async (
+    values: typeof initialValues,
+    { setSubmitting }: FormikHelpers<typeof initialValues>
+  ) => {
+    try {
+      setSubmitting(true);
+      const response = await AuthAPI.signIn(values);
+      if (response?.success) {
+        dispatch(
+          setUserSlice({
+            token: response?.data?.token || "",
+            userDetails: response?.data?.userDetails || null,
+          })
+        );
+      } else {
+        toast.error(response?.message || "Failed to sign in");
+      }
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
@@ -56,16 +82,6 @@ export default function LoginPage() {
               Sign in to continue to Task Manager
             </Typography>
           </div>
-
-          {error && (
-            <Alert
-              severity="error"
-              className="mb-4 rounded-lg"
-              onClose={() => setError(null)}
-            >
-              {error}
-            </Alert>
-          )}
 
           <Formik
             initialValues={initialValues}
